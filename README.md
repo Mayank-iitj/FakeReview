@@ -266,7 +266,7 @@ pytest tests/test_classifier.py -v
 
 ## License
 
-MIT License - see LICENSE file for details
+@Mayank-iitj
 
 ## Acknowledgments
 
