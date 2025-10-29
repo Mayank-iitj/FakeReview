@@ -98,6 +98,38 @@ class ReviewPredictor:
         
         return self.preprocessor.preprocess_text(text)
     
+    def _extract_additional_features(self, text: str) -> np.ndarray:
+        """
+        Extract 6 additional text features to match training.
+        
+        Args:
+            text: Input text string
+            
+        Returns:
+            Array of 6 features: [text_length, word_count, avg_word_length, 
+                                  uppercase_ratio, exclamation_count, question_count]
+        """
+        # Text length (character count)
+        text_length = len(str(text))
+        
+        # Word count
+        word_count = len(str(text).split())
+        
+        # Average word length
+        avg_word_length = text_length / word_count if word_count > 0 else 0
+        
+        # Uppercase ratio
+        uppercase_ratio = sum(1 for c in str(text) if c.isupper()) / text_length if text_length > 0 else 0
+        
+        # Exclamation count
+        exclamation_count = str(text).count('!')
+        
+        # Question count
+        question_count = str(text).count('?')
+        
+        return np.array([[text_length, word_count, avg_word_length, 
+                         uppercase_ratio, exclamation_count, question_count]])
+    
     def predict_single(self, review_text: str) -> Dict[str, Union[str, float]]:
         """
         Make prediction for a single review.
@@ -116,9 +148,15 @@ class ReviewPredictor:
         
         # Vectorize text
         if self.vectorizer is not None:
-            features = self.vectorizer.transform([processed_text]).toarray()
+            text_features = self.vectorizer.transform([processed_text]).toarray()
         else:
             raise ValueError("Vectorizer not loaded. Cannot transform text.")
+        
+        # Extract additional text features (6 features to match training)
+        additional_features = self._extract_additional_features(review_text)
+        
+        # Combine features
+        features = np.hstack([text_features, additional_features])
         
         # Make prediction
         prediction = self.model.predict(features)[0]
