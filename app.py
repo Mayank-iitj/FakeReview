@@ -447,7 +447,7 @@ def main():
                             st.metric("✅ Genuine Reviews", genuine_count, f"{100-fake_percentage:.1f}%")
                         
                         with col4:
-                            avg_confidence = results_df['confidence'].mean()
+                            avg_confidence = results_df['prediction_confidence'].mean()
                             st.metric("Avg Confidence", f"{avg_confidence:.1%}")
                         
                         # Alert if high fake percentage
@@ -480,10 +480,10 @@ def main():
                                 # Confidence distribution
                                 fig_hist = px.histogram(
                                     results_df,
-                                    x='confidence',
+                                    x='prediction_confidence',
                                     color='predicted_label',
                                     title='Confidence Distribution',
-                                    labels={'confidence': 'Confidence Score', 'count': 'Number of Reviews'},
+                                    labels={'prediction_confidence': 'Confidence Score', 'count': 'Number of Reviews'},
                                     color_discrete_map={config.FAKE_LABEL: '#f44336', config.GENUINE_LABEL: '#4caf50'},
                                     nbins=20
                                 )
