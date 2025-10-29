@@ -1,1 +1,8 @@
-# System packages for NLTK (for Streamlit deployment)
+# Streamlit Cloud apt packages (optional)
+# Keep this file minimal. Each non-comment line must be a valid apt package name.
+# For this project, no system packages are required. Leave commented or delete this file.
+# Example packages (uncomment only if actually needed):
+# libglib2.0-0
+# libsm6
+# libxrender1
+# libxext6
