@@ -1,0 +1,178 @@
+{
+    "timestamp": "2025-10-29T09:58:52.039868",
+    "dataset": {
+        "total_samples": 1000,
+        "training_samples": 800,
+        "testing_samples": 200,
+        "num_features": 156
+    },
+    "best_model": {
+        "name": "naive_bayes",
+        "cv_score": 1.0,
+        "test_metrics": {
+            "accuracy": 1.0,
+            "precision": 1.0,
+            "recall": 1.0,
+            "f1_score": 1.0,
+            "precision_OR": 1.0,
+            "recall_OR": 1.0,
+            "f1_OR": 1.0,
+            "precision_CG": 1.0,
+            "recall_CG": 1.0,
+            "f1_CG": 1.0,
+            "roc_auc": 1.0
+        }
+    },
+    "all_models": {
+        "naive_bayes": {
+            "metrics": {
+                "accuracy": 1.0,
+                "precision": 1.0,
+                "recall": 1.0,
+                "f1_score": 1.0,
+                "precision_OR": 1.0,
+                "recall_OR": 1.0,
+                "f1_OR": 1.0,
+                "precision_CG": 1.0,
+                "recall_CG": 1.0,
+                "f1_CG": 1.0,
+                "roc_auc": 1.0
+            },
+            "training_info": {
+                "model_name": "naive_bayes",
+                "best_params": {
+                    "alpha": 0.1
+                },
+                "cv_score": 1.0,
+                "training_time": 10.159649133682251
+            }
+        },
+        "random_forest": {
+            "metrics": {
+                "accuracy": 1.0,
+                "precision": 1.0,
+                "recall": 1.0,
+                "f1_score": 1.0,
+                "precision_OR": 1.0,
+                "recall_OR": 1.0,
+                "f1_OR": 1.0,
+                "precision_CG": 1.0,
+                "recall_CG": 1.0,
+                "f1_CG": 1.0,
+                "roc_auc": 1.0
+            },
+            "training_info": {
+                "model_name": "random_forest",
+                "best_params": {
+                    "max_depth": 10,
+                    "min_samples_leaf": 1,
+                    "min_samples_split": 2,
+                    "n_estimators": 100
+                },
+                "cv_score": 1.0,
+                "training_time": 21.30457830429077
+            }
+        },
+        "svm": {
+            "metrics": {
+                "accuracy": 1.0,
+                "precision": 1.0,
+                "recall": 1.0,
+                "f1_score": 1.0,
+                "precision_OR": 1.0,
+                "recall_OR": 1.0,
+                "f1_OR": 1.0,
+                "precision_CG": 1.0,
+                "recall_CG": 1.0,
+                "f1_CG": 1.0,
+                "roc_auc": 1.0
+            },
+            "training_info": {
+                "model_name": "svm",
+                "best_params": {
+                    "C": 0.1,
+                    "gamma": "scale",
+                    "kernel": "linear"
+                },
+                "cv_score": 1.0,
+                "training_time": 1.8040075302124023
+            }
+        },
+        "logistic_regression": {
+            "metrics": {
+                "accuracy": 1.0,
+                "precision": 1.0,
+                "recall": 1.0,
+                "f1_score": 1.0,
+                "precision_OR": 1.0,
+                "recall_OR": 1.0,
+                "f1_OR": 1.0,
+                "precision_CG": 1.0,
+                "recall_CG": 1.0,
+                "f1_CG": 1.0,
+                "roc_auc": 1.0
+            },
+            "training_info": {
+                "model_name": "logistic_regression",
+                "best_params": {
+                    "C": 0.1,
+                    "max_iter": 200,
+                    "penalty": "l2",
+                    "solver": "lbfgs"
+                },
+                "cv_score": 1.0,
+                "training_time": 0.6658675670623779
+            }
+        },
+        "decision_tree": {
+            "metrics": {
+                "accuracy": 1.0,
+                "precision": 1.0,
+                "recall": 1.0,
+                "f1_score": 1.0,
+                "precision_OR": 1.0,
+                "recall_OR": 1.0,
+                "f1_OR": 1.0,
+                "precision_CG": 1.0,
+                "recall_CG": 1.0,
+                "f1_CG": 1.0,
+                "roc_auc": 1.0
+            },
+            "training_info": {
+                "model_name": "decision_tree",
+                "best_params": {
+                    "max_depth": 10,
+                    "min_samples_leaf": 1,
+                    "min_samples_split": 2
+                },
+                "cv_score": 1.0,
+                "training_time": 0.5792462825775146
+            }
+        },
+        "knn": {
+            "metrics": {
+                "accuracy": 1.0,
+                "precision": 1.0,
+                "recall": 1.0,
+                "f1_score": 1.0,
+                "precision_OR": 1.0,
+                "recall_OR": 1.0,
+                "f1_OR": 1.0,
+                "precision_CG": 1.0,
+                "recall_CG": 1.0,
+                "f1_CG": 1.0,
+                "roc_auc": 1.0
+            },
+            "training_info": {
+                "model_name": "knn",
+                "best_params": {
+                    "metric": "euclidean",
+                    "n_neighbors": 3,
+                    "weights": "uniform"
+                },
+                "cv_score": 1.0,
+                "training_time": 2.1331114768981934
+            }
+        }
+    }
+}

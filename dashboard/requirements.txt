@@ -1,0 +1,11 @@
+# Streamlit Cloud Deployment - Lightweight requirements
+# Only includes what's needed for the dashboard
+
+streamlit==1.28.0
+plotly==5.17.0
+pandas==2.1.1
+requests==2.31.0
+python-dotenv==1.0.0
+
+# Optional: If dashboard needs to connect to API
+httpx==0.25.0
