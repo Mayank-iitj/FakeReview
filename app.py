@@ -316,6 +316,10 @@ def main():
     elif page == "🔗 URL Analysis":
         st.markdown('<h2 class="sub-header">Product URL Analysis</h2>', unsafe_allow_html=True)
         
+        # Coming Soon Banner
+        st.warning("🚧 **Coming Soon** - This feature is currently under development and will be available in a future update.")
+        st.info("Stay tuned! URL-based review analysis will allow you to automatically scrape and analyze reviews from Amazon, Flipkart, and eBay.")
+        
         st.write("Enter a product URL from supported e-commerce platforms to analyze all reviews.")
         
         # Import web scraper
@@ -554,6 +558,10 @@ def main():
     # Batch Prediction Page
     elif page == "📊 Batch Prediction":
         st.markdown('<h2 class="sub-header">Batch Review Analysis</h2>', unsafe_allow_html=True)
+        
+        # Coming Soon Banner
+        st.warning("🚧 **Coming Soon** - This feature is currently under development and will be available in a future update.")
+        st.info("Stay tuned! Batch prediction will allow you to upload a CSV file and analyze multiple reviews at once.")
         
         st.write("Upload a CSV file containing multiple reviews for batch analysis.")
         
