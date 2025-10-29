@@ -208,7 +208,7 @@ def main():
     st.sidebar.title("Navigation")
     page = st.sidebar.radio(
         "Choose a page:",
-        ["🏠 Home", "🔮 Single Prediction", "� URL Analysis", "�📊 Batch Prediction", "📈 Model Info"]
+        ["🏠 Home", "🔮 Single Prediction", "📈 Model Info"]
     )
     
     # Home Page
@@ -220,8 +220,6 @@ def main():
         
         ### Features:
         - **Single Prediction**: Analyze one review at a time
-        - **URL Analysis**: Scrape and analyze reviews from product URLs
-        - **Batch Prediction**: Upload a CSV file to analyze multiple reviews
         - **Model Info**: View model performance metrics
         
         ### How it works:
@@ -229,11 +227,6 @@ def main():
         2. Extracts linguistic features and patterns
         3. Uses trained ML models to classify the review as fake or genuine
         4. Provides confidence scores for the prediction
-        
-        ### Supported Platforms for URL Analysis:
-        - Amazon (amazon.com, amazon.in, amazon.co.uk, etc.)
-        - Flipkart (flipkart.com)
-        - eBay (ebay.com, ebay.in, etc.)
         
         ### Get Started:
         Use the navigation menu on the left to start detecting fake reviews!
@@ -311,60 +304,6 @@ def main():
                         st.error(f"Error during prediction: {str(e)}")
             else:
                 st.warning("Please enter a review text.")
-    
-    # URL Analysis Page
-    elif page == "🔗 URL Analysis":
-        st.markdown('<h2 class="sub-header">Product URL Analysis</h2>', unsafe_allow_html=True)
-        
-        # Feature in Construction
-        st.markdown("""
-            <div style="padding: 2rem; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); 
-                        border-radius: 10px; text-align: center; margin: 2rem 0;">
-                <h1 style="color: white; font-size: 3rem; margin: 0;">🚧</h1>
-                <h2 style="color: white; margin: 1rem 0;">Feature in Construction</h2>
-                <p style="color: #f0f0f0; font-size: 1.1rem; margin: 0;">
-                    We're building something amazing! URL-based review analysis will be available soon.
-                </p>
-            </div>
-        """, unsafe_allow_html=True)
-        
-        st.info("""
-        **What's Coming:**
-        - 🔗 Paste product URLs from Amazon, Flipkart, or eBay
-        - 🤖 Automatic review scraping and analysis
-        - 📊 Comprehensive fake review detection across all product reviews
-        - 📈 Visual insights and downloadable reports
-        """)
-        
-        st.markdown("---")
-        st.caption("💡 In the meantime, use the **Single Prediction** page to analyze individual reviews!")
-    
-    # Batch Prediction Page
-    elif page == "📊 Batch Prediction":
-        st.markdown('<h2 class="sub-header">Batch Review Analysis</h2>', unsafe_allow_html=True)
-        
-        # Feature in Construction
-        st.markdown("""
-            <div style="padding: 2rem; background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%); 
-                        border-radius: 10px; text-align: center; margin: 2rem 0;">
-                <h1 style="color: white; font-size: 3rem; margin: 0;">🚧</h1>
-                <h2 style="color: white; margin: 1rem 0;">Feature in Construction</h2>
-                <p style="color: #f0f0f0; font-size: 1.1rem; margin: 0;">
-                    Hang tight! Batch analysis for CSV files will be available soon.
-                </p>
-            </div>
-        """, unsafe_allow_html=True)
-        
-        st.info("""
-        **What's Coming:**
-        - 📁 Upload CSV files with multiple reviews
-        - 🔄 Analyze hundreds of reviews in one go
-        - 📊 Comprehensive statistics and visualizations
-        - 💾 Export detailed results for your records
-        """)
-        
-        st.markdown("---")
-        st.caption("� In the meantime, use the **Single Prediction** page to analyze reviews one at a time!")
     
     # Model Info Page
     elif page == "📈 Model Info":
