@@ -1,0 +1,19 @@
+# Fix for app.py - URL Analysis section confidence field issue
+# Replace all instances of ['confidence'] with ['prediction_confidence']
+
+# Lines to fix in app.py:
+# 1. avg_confidence = results_df['confidence'].mean()
+#    Should be: avg_confidence = results_df['prediction_confidence'].mean()
+
+# 2. In the confidence distribution histogram, the x parameter should use 'prediction_confidence'
+#    x='confidence' should be x='prediction_confidence'
+
+# Search and replace in app.py:
+# OLD: results_df['confidence'].mean()
+# NEW: results_df['prediction_confidence'].mean()
+
+# OLD: x='confidence'
+# NEW: x='prediction_confidence'
+
+# OLD: labels={'confidence': 'Confidence Score'
+# NEW: labels={'prediction_confidence': 'Confidence Score'

@@ -1,0 +1,4 @@
+text,rating,date,platform,predicted_label,prediction_confidence,prob_CG,prob_OR
+Amazing product! Best purchase ever! Five stars! Highly recommend!,5.0 out of 5 stars,"October 15, 2025",Demo,CG,1.0,1.0,2.362431109942251e-23
+Product is okay. Does what it says. Shipping was a bit slow but overall satisfied.,4.0 out of 5 stars,"October 20, 2025",Demo,OR,0.999100013204221,0.0008999867957794456,0.999100013204221
+Perfect!!! Excellent quality!!! Must buy!!! Amazing deal!!!,5.0 out of 5 stars,"October 22, 2025",Demo,CG,1.0,1.0,6.880931838019123e-53
