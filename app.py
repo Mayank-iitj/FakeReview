@@ -320,13 +320,18 @@ def main():
         
         # Import web scraper
         try:
-            from src.web_scraper import ReviewScraper
+            # Prefer the newer, Streamlit-friendly scraper
+            from src.url_reviews import ReviewScraper
         except ImportError:
             try:
-                from web_scraper import ReviewScraper
+                from url_reviews import ReviewScraper
             except ImportError:
-                st.error("Web scraper module not found. Please ensure web_scraper.py is in the src directory.")
-                st.stop()
+                # Fallback to legacy module name if present
+                try:
+                    from src.web_scraper import ReviewScraper
+                except Exception:
+                    st.error("Web scraper module not found. Please ensure 'src/url_reviews.py' exists.")
+                    st.stop()
         
         # Supported platforms info
         with st.expander("ℹ️ Supported Platforms"):
@@ -359,9 +364,8 @@ def main():
                 help="Maximum number of reviews to analyze"
             )
         
-        # Sample URLs for testing
-        st.markdown("**Quick Test URLs:**")
-        st.caption("You can try these sample URLs for testing (subject to availability)")
+        # Helpful tip
+        st.info("Tip: Use the product URL from the same regional domain (e.g., amazon.in for India). Reviews are fetched page by page.")
         
         # Analyze button
         if st.button("🔍 Scrape & Analyze Reviews", type="primary"):
@@ -529,10 +533,10 @@ def main():
                             st.caption("Reviews with highest confidence of being fake")
                             
                             fake_reviews = results_df[results_df['predicted_label'] == config.FAKE_LABEL]
-                            top_suspicious = fake_reviews.nlargest(5, 'confidence')
+                            top_suspicious = fake_reviews.nlargest(5, 'prediction_confidence')
                             
                             for idx, row in top_suspicious.iterrows():
-                                with st.expander(f"Review #{idx+1} - Confidence: {row['confidence']:.1%}"):
+                                with st.expander(f"Review #{idx+1} - Confidence: {row['prediction_confidence']:.1%}"):
                                     st.write("**Review Text:**")
                                     st.write(row['text'])
                                     if 'rating' in row:
