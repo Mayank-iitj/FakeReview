@@ -316,338 +316,55 @@ def main():
     elif page == "🔗 URL Analysis":
         st.markdown('<h2 class="sub-header">Product URL Analysis</h2>', unsafe_allow_html=True)
         
-        # Coming Soon Banner
-        st.warning("🚧 **Coming Soon** - This feature is currently under development and will be available in a future update.")
-        st.info("Stay tuned! URL-based review analysis will allow you to automatically scrape and analyze reviews from Amazon, Flipkart, and eBay.")
+        # Feature in Construction
+        st.markdown("""
+            <div style="padding: 2rem; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); 
+                        border-radius: 10px; text-align: center; margin: 2rem 0;">
+                <h1 style="color: white; font-size: 3rem; margin: 0;">🚧</h1>
+                <h2 style="color: white; margin: 1rem 0;">Feature in Construction</h2>
+                <p style="color: #f0f0f0; font-size: 1.1rem; margin: 0;">
+                    We're building something amazing! URL-based review analysis will be available soon.
+                </p>
+            </div>
+        """, unsafe_allow_html=True)
         
-        st.write("Enter a product URL from supported e-commerce platforms to analyze all reviews.")
+        st.info("""
+        **What's Coming:**
+        - 🔗 Paste product URLs from Amazon, Flipkart, or eBay
+        - 🤖 Automatic review scraping and analysis
+        - 📊 Comprehensive fake review detection across all product reviews
+        - 📈 Visual insights and downloadable reports
+        """)
         
-        # Import web scraper
-        try:
-            # Prefer the newer, Streamlit-friendly scraper
-            from src.url_reviews import ReviewScraper
-        except ImportError:
-            try:
-                from url_reviews import ReviewScraper
-            except ImportError:
-                # Fallback to legacy module name if present
-                try:
-                    from src.web_scraper import ReviewScraper
-                except Exception:
-                    st.error("Web scraper module not found. Please ensure 'src/url_reviews.py' exists.")
-                    st.stop()
-        
-        # Supported platforms info
-        with st.expander("ℹ️ Supported Platforms"):
-            st.markdown("""
-            - **Amazon**: amazon.com, amazon.in, amazon.co.uk, amazon.de, amazon.fr
-            - **Flipkart**: flipkart.com
-            - **eBay**: ebay.com, ebay.in, ebay.co.uk
-            
-            **Note**: Web scraping is subject to the platform's terms of service and robots.txt.
-            This feature is for educational/research purposes.
-            """)
-        
-        # URL input
-        col1, col2 = st.columns([3, 1])
-        
-        with col1:
-            product_url = st.text_input(
-                "Product URL:",
-                placeholder="https://www.amazon.com/product/...",
-                help="Paste the full product URL from a supported platform"
-            )
-        
-        with col2:
-            max_reviews = st.number_input(
-                "Max Reviews:",
-                min_value=10,
-                max_value=100,
-                value=50,
-                step=10,
-                help="Maximum number of reviews to analyze"
-            )
-        
-        # Helpful tip
-        st.info("Tip: Use the product URL from the same regional domain (e.g., amazon.in for India). Reviews are fetched page by page.")
-        
-        # Analyze button
-        if st.button("🔍 Scrape & Analyze Reviews", type="primary"):
-            if product_url.strip():
-                # Initialize scraper
-                scraper = ReviewScraper(max_reviews=max_reviews, delay=1.5)
-                
-                # Identify platform
-                platform = scraper.identify_platform(product_url)
-                
-                if not platform:
-                    st.error("❌ Unsupported platform. Please use a URL from Amazon, Flipkart, or eBay.")
-                    st.stop()
-                
-                st.info(f"🔍 Detected platform: **{platform.title()}**")
-                
-                # Scrape reviews
-                with st.spinner(f"Scraping reviews from {platform.title()}... This may take a minute."):
-                    try:
-                        reviews = scraper.scrape_reviews(product_url)
-                        
-                        if not reviews:
-                            st.warning("⚠️ No reviews found. The page might have changed or there are no reviews available.")
-                            st.info("**Troubleshooting tips:**")
-                            st.markdown("""
-                            - Verify the URL is correct and the product has reviews
-                            - Some platforms may block automated requests
-                            - Try a different product or platform
-                            - For production use, consider using official APIs
-                            """)
-                            st.stop()
-                        
-                        st.success(f"✅ Successfully scraped {len(reviews)} reviews!")
-                        
-                        # Convert to DataFrame
-                        reviews_df = scraper.reviews_to_dataframe(reviews)
-                        
-                        # Show preview
-                        with st.expander("📋 View Scraped Reviews", expanded=False):
-                            st.dataframe(reviews_df, use_container_width=True)
-                    
-                    except Exception as e:
-                        st.error(f"❌ Error scraping reviews: {str(e)}")
-                        st.info("This might be due to:")
-                        st.markdown("""
-                        - Network connectivity issues
-                        - Website structure changes
-                        - Anti-scraping measures by the platform
-                        - Rate limiting
-                        
-                        **Recommendation**: Try again later or use the Batch Prediction feature with a CSV file.
-                        """)
-                        st.stop()
-                
-                # Analyze reviews
-                with st.spinner(f"Analyzing {len(reviews)} reviews..."):
-                    try:
-                        # Predict on all reviews
-                        results_df = predictor.predict_from_dataframe(reviews_df, 'text')
-                        
-                        st.success("✅ Analysis complete!")
-                        
-                        # Display summary
-                        st.markdown("---")
-                        st.markdown('<h3 class="sub-header">📊 Analysis Results</h3>', unsafe_allow_html=True)
-                        
-                        # Key metrics
-                        total = len(results_df)
-                        fake_count = (results_df['predicted_label'] == config.FAKE_LABEL).sum()
-                        genuine_count = (results_df['predicted_label'] == config.GENUINE_LABEL).sum()
-                        fake_percentage = (fake_count / total * 100) if total > 0 else 0
-                        
-                        # Display metrics in columns
-                        col1, col2, col3, col4 = st.columns(4)
-                        
-                        with col1:
-                            st.metric("Total Reviews", total)
-                        
-                        with col2:
-                            st.metric("🚫 Fake Reviews", fake_count, f"{fake_percentage:.1f}%")
-                        
-                        with col3:
-                            st.metric("✅ Genuine Reviews", genuine_count, f"{100-fake_percentage:.1f}%")
-                        
-                        with col4:
-                            avg_confidence = results_df['prediction_confidence'].mean()
-                            st.metric("Avg Confidence", f"{avg_confidence:.1%}")
-                        
-                        # Alert if high fake percentage
-                        if fake_percentage > 30:
-                            st.error(f"⚠️ **High Alert**: {fake_percentage:.1f}% of reviews appear to be fake! This product may have suspicious review activity.")
-                        elif fake_percentage > 15:
-                            st.warning(f"⚠️ **Caution**: {fake_percentage:.1f}% of reviews appear to be fake. Review this product carefully.")
-                        else:
-                            st.success(f"✅ **Good**: Only {fake_percentage:.1f}% of reviews appear to be fake. This product seems trustworthy.")
-                        
-                        # Visualization
-                        st.markdown("### 📈 Visual Analysis")
-                        
-                        if PLOTLY_AVAILABLE:
-                            col1, col2 = st.columns(2)
-                            
-                            with col1:
-                                # Pie chart
-                                fig_pie = px.pie(
-                                    values=[fake_count, genuine_count],
-                                    names=['Fake', 'Genuine'],
-                                    title='Review Distribution',
-                                    color_discrete_sequence=['#f44336', '#4caf50'],
-                                    hole=0.4
-                                )
-                                fig_pie.update_traces(textposition='inside', textinfo='percent+label')
-                                st.plotly_chart(fig_pie, use_container_width=True)
-                            
-                            with col2:
-                                # Confidence distribution
-                                fig_hist = px.histogram(
-                                    results_df,
-                                    x='prediction_confidence',
-                                    color='predicted_label',
-                                    title='Confidence Distribution',
-                                    labels={'prediction_confidence': 'Confidence Score', 'count': 'Number of Reviews'},
-                                    color_discrete_map={config.FAKE_LABEL: '#f44336', config.GENUINE_LABEL: '#4caf50'},
-                                    nbins=20
-                                )
-                                st.plotly_chart(fig_hist, use_container_width=True)
-                        
-                        # Detailed results table
-                        st.markdown("### 📋 Detailed Results")
-                        
-                        # Add filter
-                        filter_option = st.selectbox(
-                            "Filter reviews:",
-                            ["All Reviews", "Fake Reviews Only", "Genuine Reviews Only"]
-                        )
-                        
-                        if filter_option == "Fake Reviews Only":
-                            display_df = results_df[results_df['predicted_label'] == config.FAKE_LABEL]
-                        elif filter_option == "Genuine Reviews Only":
-                            display_df = results_df[results_df['predicted_label'] == config.GENUINE_LABEL]
-                        else:
-                            display_df = results_df
-                        
-                        # Display with formatting
-                        st.dataframe(
-                            display_df.style.applymap(
-                                lambda x: 'background-color: #ffebee' if x == config.FAKE_LABEL else 'background-color: #e8f5e9',
-                                subset=['predicted_label']
-                            ),
-                            use_container_width=True
-                        )
-                        
-                        # Download button
-                        csv = results_df.to_csv(index=False)
-                        st.download_button(
-                            label="📥 Download Full Analysis",
-                            data=csv,
-                            file_name=f"review_analysis_{platform}_{datetime.now().strftime('%Y%m%d_%H%M%S')}.csv",
-                            mime="text/csv"
-                        )
-                        
-                        # Top suspicious reviews
-                        if fake_count > 0:
-                            st.markdown("### 🚨 Most Suspicious Reviews")
-                            st.caption("Reviews with highest confidence of being fake")
-                            
-                            fake_reviews = results_df[results_df['predicted_label'] == config.FAKE_LABEL]
-                            top_suspicious = fake_reviews.nlargest(5, 'prediction_confidence')
-                            
-                            for idx, row in top_suspicious.iterrows():
-                                with st.expander(f"Review #{idx+1} - Confidence: {row['prediction_confidence']:.1%}"):
-                                    st.write("**Review Text:**")
-                                    st.write(row['text'])
-                                    if 'rating' in row:
-                                        st.write(f"**Rating:** {row['rating']}")
-                                    if 'date' in row:
-                                        st.write(f"**Date:** {row['date']}")
-                    
-                    except Exception as e:
-                        st.error(f"❌ Error analyzing reviews: {str(e)}")
-                        import traceback
-                        st.code(traceback.format_exc())
-            else:
-                st.warning("⚠️ Please enter a product URL.")
+        st.markdown("---")
+        st.caption("💡 In the meantime, use the **Single Prediction** page to analyze individual reviews!")
     
     # Batch Prediction Page
     elif page == "📊 Batch Prediction":
         st.markdown('<h2 class="sub-header">Batch Review Analysis</h2>', unsafe_allow_html=True)
         
-        # Coming Soon Banner
-        st.warning("🚧 **Coming Soon** - This feature is currently under development and will be available in a future update.")
-        st.info("Stay tuned! Batch prediction will allow you to upload a CSV file and analyze multiple reviews at once.")
+        # Feature in Construction
+        st.markdown("""
+            <div style="padding: 2rem; background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%); 
+                        border-radius: 10px; text-align: center; margin: 2rem 0;">
+                <h1 style="color: white; font-size: 3rem; margin: 0;">🚧</h1>
+                <h2 style="color: white; margin: 1rem 0;">Feature in Construction</h2>
+                <p style="color: #f0f0f0; font-size: 1.1rem; margin: 0;">
+                    Hang tight! Batch analysis for CSV files will be available soon.
+                </p>
+            </div>
+        """, unsafe_allow_html=True)
         
-        st.write("Upload a CSV file containing multiple reviews for batch analysis.")
+        st.info("""
+        **What's Coming:**
+        - 📁 Upload CSV files with multiple reviews
+        - 🔄 Analyze hundreds of reviews in one go
+        - 📊 Comprehensive statistics and visualizations
+        - 💾 Export detailed results for your records
+        """)
         
-        # File upload
-        uploaded_file = st.file_uploader(
-            "Choose a CSV file",
-            type=['csv'],
-            help="CSV file should have a column named 'review_text'"
-        )
-        
-        if uploaded_file is not None:
-            try:
-                # Load data
-                df = pd.read_csv(uploaded_file)
-                
-                st.success(f"File uploaded successfully! Found {len(df)} reviews.")
-                
-                # Show preview
-                st.subheader("Data Preview")
-                st.dataframe(df.head(), use_container_width=True)
-                
-                # Select text column
-                text_column = st.selectbox(
-                    "Select the column containing review text:",
-                    df.columns.tolist()
-                )
-                
-                # Analyze button
-                if st.button("📊 Analyze All Reviews", type="primary"):
-                    with st.spinner(f"Analyzing {len(df)} reviews..."):
-                        try:
-                            # Make predictions
-                            results_df = predictor.predict_from_dataframe(df, text_column)
-                            
-                            # Display summary
-                            st.success("Batch analysis complete!")
-                            
-                            st.subheader("Results Summary")
-                            
-                            col1, col2, col3 = st.columns(3)
-                            
-                            with col1:
-                                total = len(results_df)
-                                st.metric("Total Reviews", total)
-                            
-                            with col2:
-                                fake_count = (results_df['predicted_label'] == config.FAKE_LABEL).sum()
-                                st.metric("Fake Reviews", fake_count)
-                            
-                            with col3:
-                                genuine_count = (results_df['predicted_label'] == config.GENUINE_LABEL).sum()
-                                st.metric("Genuine Reviews", genuine_count)
-                            
-                            # Pie chart
-                            if PLOTLY_AVAILABLE:
-                                fig = px.pie(
-                                    values=[fake_count, genuine_count],
-                                    names=['Fake', 'Genuine'],
-                                    title='Review Distribution',
-                                    color_discrete_sequence=['#f44336', '#4caf50']
-                                )
-                                st.plotly_chart(fig, use_container_width=True)
-                            else:
-                                # Fallback to simple display
-                                st.write(f"**Fake Reviews:** {fake_count}")
-                                st.write(f"**Genuine Reviews:** {genuine_count}")
-                                st.progress(fake_count / total if total > 0 else 0)
-                            
-                            # Show results table
-                            st.subheader("Detailed Results")
-                            st.dataframe(results_df, use_container_width=True)
-                            
-                            # Download button
-                            csv = results_df.to_csv(index=False)
-                            st.download_button(
-                                label="📥 Download Results",
-                                data=csv,
-                                file_name=f"fake_review_analysis_{datetime.now().strftime('%Y%m%d_%H%M%S')}.csv",
-                                mime="text/csv"
-                            )
-                        
-                        except Exception as e:
-                            st.error(f"Error during batch prediction: {str(e)}")
-            
-            except Exception as e:
-                st.error(f"Error loading file: {str(e)}")
+        st.markdown("---")
+        st.caption("� In the meantime, use the **Single Prediction** page to analyze reviews one at a time!")
     
     # Model Info Page
     elif page == "📈 Model Info":
